@@ -1,6 +1,6 @@
 # 💬 Real‑Time Chat Application
 
-Aplicação de **chat em tempo real** desenvolvida com **NestJS + Socket.IO no backend** e **React + TypeScript + TailwindCSS no frontend**. O projeto suporta **salas obrigatórias**, **emojis**, **indicador de digitação**, **animações sutis**, **scroll inteligente** e comunicação em tempo real via WebSockets.
+Aplicação de **chat em tempo real** desenvolvida com **NestJS + Socket.IO no backend** e **React + TypeScript + TailwindCSS no frontend**. O projeto suporta **salas obrigatórias**, **emojis**, **animações sutis**, **scroll inteligente** e comunicação em tempo real via WebSockets.
 
 ---
 
