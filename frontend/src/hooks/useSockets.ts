@@ -1,15 +1,16 @@
-import { io, Socket } from 'socket.io-client';
-import { useEffect, useState } from 'react';
-import type { Message, User } from '../types/chat';
+import { io, Socket } from "socket.io-client";
+import { useEffect, useRef, useState } from "react";
+import type { Message, User } from "../types/chat";
 import type {
   ServerToClientEvents,
   ClientToServerEvents,
-} from '../types/socket-events';
+} from "../types/socket-events";
 
 export function useSocket() {
-  const [socket, setSocket] = useState<
-    Socket<ServerToClientEvents, ClientToServerEvents> | null
-  >(null);
+  const socketRef = useRef<Socket<
+    ServerToClientEvents,
+    ClientToServerEvents
+  > | null>(null);
 
   const [isConnected, setIsConnected] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -17,36 +18,35 @@ export function useSocket() {
   const [rooms, setRooms] = useState<string[]>([]);
 
   useEffect(() => {
-    const s = io(
-      'http://localhost:3001',
-      { transports: ['websocket'] }
+    const s: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+      import.meta.env.SOCKET_URL || "http://localhost:3000",
+      { transports: ["websocket"] }
     );
 
-    s.on('connect', () => setIsConnected(true));
-    s.on('disconnect', () => setIsConnected(false));
+    socketRef.current = s;
 
-    s.on('rooms', setRooms);
-    s.on('userData', setCurrentUser);
-    s.on('previousMessages', setMessages);
-    s.on('message', msg =>
-      setMessages(prev => [...prev, msg])
-    );
+    s.on("connect", () => setIsConnected(true));
+    s.on("disconnect", () => setIsConnected(false));
 
-    setSocket(s);
+    s.on("rooms", setRooms);
+    s.on("userData", setCurrentUser);
+    s.on("previousMessages", setMessages);
+    s.on("message", (msg) => setMessages((prev) => [...prev, msg]));
 
     return () => {
       s.disconnect();
+      socketRef.current = null;
     };
   }, []);
 
   const joinRoom = (username: string, room: string) => {
-    socket?.emit('join', { username, room });
+    socketRef?.current?.emit("join", { username, room });
   };
 
   const sendMessage = (content: string) => {
     if (!currentUser) return;
 
-    socket?.emit('message', {
+    socketRef?.current?.emit("message", {
       content,
       sender: currentUser.username,
       room: currentUser.room,

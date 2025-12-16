@@ -31,7 +31,9 @@ export class ChatService {
   }
 
   getUser(socketId: string): User | undefined {
-    return Array.from(this.users.values()).find(user => user.socketId === socketId);
+    return Array.from(this.users.values()).find(
+      (user) => user.socketId === socketId,
+    );
   }
 
   getUsers(): User[] {
@@ -40,11 +42,11 @@ export class ChatService {
 
   getMessages(room?: string): Message[] {
     if (!room) return this.messages;
-    return this.messages.filter(msg => msg.room === room);
+    return this.messages.filter((msg) => msg.room === room);
   }
 
   getUsersInRoom(room: string): User[] {
-    return this.getUsers().filter(user => user.room === room);
+    return this.getUsers().filter((user) => user.room === room);
   }
 
   addRoom(room: string) {

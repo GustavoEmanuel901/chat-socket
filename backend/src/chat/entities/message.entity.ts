@@ -1,10 +1,12 @@
+import { TypeMessageEnum } from '../enums/type-message.enum';
+
 export class Message {
   id: string;
   content: string;
   sender: string;
   senderId: string;
   timestamp: Date;
-  type: 'message' | 'join' | 'leave';
+  type: TypeMessageEnum;
   room?: string;
 }
 
